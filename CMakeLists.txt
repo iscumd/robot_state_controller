@@ -4,7 +4,6 @@ project(robot_state_controller)
 find(catkin REQUIRED COMPONENTS
     std_msgs
     geometry_msgs
-    isc_joy
     roscpp
     rosconsole
 )
