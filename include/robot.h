@@ -11,7 +11,7 @@ class State {
 			AUTONOMOUS
 		};
 
-		static std::string driveModeToString(State::DriveMode driveMode) {
+		static std::string driveModeToString(DriveMode driveMode) {
 			switch(driveMode) {
 			case AUTONOMOUS: return "auto";
 			case MANUAL:
@@ -34,7 +34,7 @@ class State {
 			PAUSE
 		};
 
-		static std::string robotStateToString(State::RobotState robotState) {
+		static std::string robotStateToString(RobotState robotState) {
 			switch(robotState) {
 			case STARTUP: return "startup";
 			case READY: return "ready";
@@ -90,4 +90,3 @@ class Robot {
 
 		~Robot() {}
 };
-
