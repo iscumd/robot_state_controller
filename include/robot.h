@@ -12,7 +12,7 @@ public:
 		AUTONOMOUS
 	};
 
-	static std::string driveModeToString(DriveMode driveMode) {
+	static std::string driveModeToString(State::DriveMode driveMode) {
 		switch(driveMode) {
 		case AUTONOMOUS: return "auto";
 		case MANUAL:
@@ -35,7 +35,7 @@ public:
 		PAUSE
 	};
 
-	static std::string robotStateToString(RobotState robotState) {
+	static std::string robotStateToString(State::RobotState robotState) {
 		switch(robotState) {
 		case STARTUP: return "startup";
 		case READY: return "ready";
