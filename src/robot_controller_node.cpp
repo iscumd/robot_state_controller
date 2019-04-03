@@ -16,6 +16,8 @@ private:
 	ros::Subscriber m_joystickSub; // get joystick inputs
 	ros::Subscriber m_killSub; // get kill signals
 	ros::Subscriber m_pauseSub; // get pause signals
+	ros::Subscriber m_softPauseSub; // software pause
+
 
 public:
 	RobotControllerNode() : m_nh("~") {
@@ -39,6 +41,7 @@ public:
 		m_joystickSub = m_nh.subscribe<std_msgs::Bool>("/signal/drive_mode", 0, &RobotControllerNode::joystickCallback, this);
 		m_killSub = m_nh.subscribe<std_msgs::Bool>("/signal/kill", 0, &RobotControllerNode::killCallback, this);
 		m_pauseSub = m_nh.subscribe<std_msgs::Bool>("/signal/pause", 0, &RobotControllerNode::pauseCallback, this);
+		m_softPauseSub = m_nh.subscribe<std_msgs::Bool>("/signal/soft_pause", 0, &RobotControllerNode::softPauseCallback, this);
 
 		if (m_waitTime > 0.0) ros::Duration(m_waitTime).sleep();
 		ROS_DEBUG_COND(m_enableLogging, "Ready.");
