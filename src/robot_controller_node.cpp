@@ -100,7 +100,6 @@ public:
 		signal true -> PAUSE
 		signal false & paused -> READY
 	*/
-
 	void pauseCallback(const std_msgs::Bool::ConstPtr& pauseSignal) {
 		if (pauseSignal->data) {
 			m_robot.setRobotState(State::PAUSE);
@@ -109,6 +108,21 @@ public:
 		else if(m_robot.getRobotState() == State::PAUSE) {
 			m_robot.setRobotState(State::READY);
 			ROS_DEBUG_COND(m_enableLogging, "Robot unpaused");
+		}
+	}
+
+	/*
+		signal true -> PAUSE
+		signal false & paused -> READY
+	*/
+	void softPauseCallback(const std_msgs::Bool::ConstPtr& softPauseSignal) {
+		if (softPauseSignal->data) {
+			m_robot.setRobotState(State::SOFTPAUSE);
+			ROS_DEBUG_COND(m_enableLogging, "Robot software paused.");
+		}
+		else if(m_robot.getRobotState() == State::SOFTPAUSE) {
+			m_robot.setRobotState(State::READY);
+			ROS_DEBUG_COND(m_enableLogging, "Robot software unpaused");
 		}
 	}
 };
