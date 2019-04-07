@@ -89,8 +89,7 @@ public:
 		if (killSignal->data) {
 			m_robot.setRobotState(State::KILL);
 			ROS_DEBUG_COND(m_enableLogging, "Robot killed.");
-		}
-		else if(m_robot.getRobotState() == State::KILL) {
+		} else if(m_robot.getRobotState() == State::KILL) {
 			m_robot.setRobotState(State::STARTUP);
 			ROS_DEBUG_COND(m_enableLogging, "Robot unkilled.");
 		}
@@ -104,8 +103,7 @@ public:
 		if (pauseSignal->data) {
 			m_robot.setRobotState(State::PAUSE);
 			ROS_DEBUG_COND(m_enableLogging, "Robot paused.");
-		}
-		else if(m_robot.getRobotState() == State::PAUSE) {
+		} else if(m_robot.getRobotState() == State::PAUSE) {
 			m_robot.setRobotState(State::READY);
 			ROS_DEBUG_COND(m_enableLogging, "Robot unpaused");
 		}
@@ -119,8 +117,7 @@ public:
 		if (softPauseSignal->data) {
 			m_robot.setRobotState(State::SOFTPAUSE);
 			ROS_DEBUG_COND(m_enableLogging, "Robot software paused.");
-		}
-		else if(m_robot.getRobotState() == State::SOFTPAUSE) {
+		} else if(m_robot.getRobotState() == State::SOFTPAUSE) {
 			m_robot.setRobotState(State::READY);
 			ROS_DEBUG_COND(m_enableLogging, "Robot software unpaused");
 		}
