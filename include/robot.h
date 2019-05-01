@@ -32,7 +32,8 @@ public:
 		STARTUP,
 		READY,
 		KILL,
-		PAUSE
+		PAUSE,
+		SOFTPAUSE
 	};
 
 	static std::string robotStateToString(State::RobotState robotState) {
@@ -40,6 +41,7 @@ public:
 		case STARTUP: return "startup";
 		case READY: return "ready";
 		case KILL: return "kill";
+		case SOFTPAUSE: return "softpause";
 		case PAUSE:
 		default: return "pause";
 		}
