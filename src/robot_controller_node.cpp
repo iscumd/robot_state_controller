@@ -51,7 +51,7 @@ public:
 	void update() {
 		if (m_robot.getRobotState() == State::STARTUP) boot(); // run startup
 
-		std_msgs::String state // create msgs for state
+		std_msgs::String state; // create msgs for state
 		state.data = State::robotStateToString(m_robot.getRobotState()); // set state msg
 
 		m_robotStatePub.publish(state); // publish state 
