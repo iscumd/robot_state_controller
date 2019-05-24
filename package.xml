@@ -29,6 +29,10 @@
     <build_export_depend>rosconsole</build_export_depend>
     <exec_depend>rosconsole</exec_depend>
 
+    <build_depend>isc_joy</build_depend>
+    <build_export_depend>isc_joy</build_export_depend>
+    <exec_depend>isc_joy</exec_depend>
+
     <export>
         <!-- Other tools can request additional information be placed here -->
     </export>
