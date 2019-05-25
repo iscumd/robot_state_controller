@@ -92,11 +92,11 @@ void manual_control_cb(const geometry_msgs::Twist::ConstPtr &control) {
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "drive_mode_switch");
 	
-	ros::NodeHandle nh, nh_private("~");
+	ros::NodeHandle nh;
 
 	// get params for state names
-	nh_private.param("kill_state_string", kill_state, std::string("kill"));
-	nh_private.param("ready_state_string", normal_state, std::string("ready"));
+	nh.param("kill_state_string", kill_state, std::string("kill"));
+	nh.param("ready_state_string", normal_state, std::string("ready"));
 
 	// set up controls in and control out, and drive mode pub / state sub
 	control_pub = nh.advertise<geometry_msgs::Twist>("control_vel", 1);
