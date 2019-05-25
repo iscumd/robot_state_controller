@@ -13,6 +13,10 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
 )
 
+catkin_package(
+	CATKIN_DEPENDS roscpp std_msgs geometry_msgs isc_joy
+)
+
 ## build the state controller
 add_executable(robot_state_controller src/robot_controller_node.cpp)
 add_dependencies(robot_state_controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
