@@ -10,7 +10,7 @@ private:
 	bool m_enableLogging; // param to enable logging
 	double m_waitTime; // how much time, if any, before the robot can move to READY state
 
-	ros::NodeHandle m_nh;
+	ros::NodeHandle m_nh, m_nh_private;
 	ros::Publisher m_robotStatePub; // publish robot state
 	ros::Subscriber m_killSub; // get kill signals
 	ros::Subscriber m_pauseSub; // get pause signals
@@ -18,9 +18,9 @@ private:
 
 
 public:
-	RobotControllerNode() : m_nh("~") {
-		m_nh.param("enable_logging", m_enableLogging, false);
-		m_nh.param("startup_wait_time", m_waitTime, 0.0);
+	RobotControllerNode() : m_nh(), m_nh_private("~") {
+		m_nh_private.param("enable_logging", m_enableLogging, false);
+		m_nh_private.param("startup_wait_time", m_waitTime, 0.0);
 		update();
 	}
 
