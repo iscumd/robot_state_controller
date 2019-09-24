@@ -10,19 +10,17 @@ private:
 	bool m_enableLogging; // param to enable logging
 	double m_waitTime; // how much time, if any, before the robot can move to READY state
 
-	ros::NodeHandle m_nh;
+	ros::NodeHandle m_nh, m_nh_private;
 	ros::Publisher m_robotStatePub; // publish robot state
-	ros::Publisher m_driveModePub; // publish drive mode
-	ros::Subscriber m_joystickSub; // get joystick inputs
 	ros::Subscriber m_killSub; // get kill signals
 	ros::Subscriber m_pauseSub; // get pause signals
 	ros::Subscriber m_softPauseSub; // software pause
 
 
 public:
-	RobotControllerNode() : m_nh("~") {
-		m_nh.param("enable_logging", m_enableLogging, false);
-		m_nh.param("startup_wait_time", m_waitTime, 0.0);
+	RobotControllerNode() : m_nh(), m_nh_private("~") {
+		m_nh_private.param("enable_logging", m_enableLogging, false);
+		m_nh_private.param("startup_wait_time", m_waitTime, 0.0);
 		update();
 	}
 
@@ -36,12 +34,19 @@ public:
 		if (m_robot.getRobotState() != State::STARTUP) return;
 		ROS_DEBUG_COND(m_enableLogging, "Booting...");
 
+<<<<<<< HEAD
 		m_robotStatePub = m_nh.advertise<std_msgs::String>("/state/robot", 5, true);
 		m_driveModePub = m_nh.advertise<std_msgs::String>("/state/drive_mode", 5, true);
 		m_joystickSub = m_nh.subscribe<std_msgs::Bool>("/signal/drive_mode", 0, &RobotControllerNode::joystickCallback, this);
 		m_killSub = m_nh.subscribe<std_msgs::Bool>("/signal/kill", 0, &RobotControllerNode::killCallback, this);
 		m_pauseSub = m_nh.subscribe<std_msgs::Bool>("/signal/pause", 0, &RobotControllerNode::pauseCallback, this);
 		m_softPauseSub = m_nh.subscribe<std_msgs::Bool>("/signal/soft_pause", 0, &RobotControllerNode::softPauseCallback, this);
+=======
+		m_robotStatePub = m_nh.advertise<std_msgs::String>("state/robot", 5, true);
+		m_killSub = m_nh.subscribe<std_msgs::Bool>("signal/kill", 0, &RobotControllerNode::killCallback, this);
+		m_pauseSub = m_nh.subscribe<std_msgs::Bool>("signal/pause", 0, &RobotControllerNode::pauseCallback, this);
+		m_softPauseSub = m_nh.subscribe<std_msgs::Bool>("signal/soft_pause", 0, &RobotControllerNode::softPauseCallback, this);
+>>>>>>> upstream/master
 
 		if (m_waitTime > 0.0) ros::Duration(m_waitTime).sleep();
 		ROS_DEBUG_COND(m_enableLogging, "Ready.");
@@ -53,32 +58,11 @@ public:
 	*/
 	void update() {
 		if (m_robot.getRobotState() == State::STARTUP) boot(); // run startup
-		else if (m_robot.getRobotState() == State::KILL) m_robot.setDriveMode(State::MANUAL);
 
-		std_msgs::String state, driveMode; // create msgs for state and drive mode
-		state.data = State::robotStateToString(m_robot.getRobotState()); // set both
-		driveMode.data = State::driveModeToString(m_robot.getDriveMode());
+		std_msgs::String state; // create msgs for state
+		state.data = State::robotStateToString(m_robot.getRobotState()); // set state msg
 
-		m_robotStatePub.publish(state);
-		m_driveModePub.publish(driveMode); // publish state and drive mode
-	}
-
-	/*
-		Toggles drive mode on Start press. The signal is true, when the button to
-		switch drive mode is pressed. This triggers the state change below.
-	*/
-	void joystickCallback(const std_msgs::Bool::ConstPtr& joySignal) {
-		if (joySignal->data) {
-			if (m_robot.getDriveMode() == State::MANUAL) {
-				m_robot.setDriveMode(State::AUTONOMOUS);
-				ROS_DEBUG_COND(m_enableLogging, "Robot set to auto.");
-			} else if (m_robot.getDriveMode() == State::AUTONOMOUS) {
-				m_robot.setDriveMode(State::MANUAL);
-				ROS_DEBUG_COND(m_enableLogging, "Robot set to manual.");
-			} else {
-				ROS_DEBUG_COND(m_enableLogging, "Drive mode is not manual or auto."); // panic
-			}
-		}
+		m_robotStatePub.publish(state); // publish state 
 	}
 
 	/*
