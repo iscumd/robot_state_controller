@@ -23,6 +23,6 @@ add_dependencies(robot_state_controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${ca
 target_link_libraries(robot_state_controller ${catkin_LIBRARIES})
 
 ## build the drive mode switch
-add_executable(drive_mode_switch src/drive_mode_switch/drive_mode_switch.cpp)
+add_executable(drive_mode_switch src/drive_mode_switch.cpp)
 add_dependencies(drive_mode_switch ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(drive_mode_switch ${catkin_LIBRARIES})
