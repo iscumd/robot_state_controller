@@ -34,19 +34,10 @@ public:
 		if (m_robot.getRobotState() != State::STARTUP) return;
 		ROS_DEBUG_COND(m_enableLogging, "Booting...");
 
-<<<<<<< HEAD
-		m_robotStatePub = m_nh.advertise<std_msgs::String>("/state/robot", 5, true);
-		m_driveModePub = m_nh.advertise<std_msgs::String>("/state/drive_mode", 5, true);
-		m_joystickSub = m_nh.subscribe<std_msgs::Bool>("/signal/drive_mode", 0, &RobotControllerNode::joystickCallback, this);
-		m_killSub = m_nh.subscribe<std_msgs::Bool>("/signal/kill", 0, &RobotControllerNode::killCallback, this);
-		m_pauseSub = m_nh.subscribe<std_msgs::Bool>("/signal/pause", 0, &RobotControllerNode::pauseCallback, this);
-		m_softPauseSub = m_nh.subscribe<std_msgs::Bool>("/signal/soft_pause", 0, &RobotControllerNode::softPauseCallback, this);
-=======
 		m_robotStatePub = m_nh.advertise<std_msgs::String>("state/robot", 5, true);
 		m_killSub = m_nh.subscribe<std_msgs::Bool>("signal/kill", 0, &RobotControllerNode::killCallback, this);
 		m_pauseSub = m_nh.subscribe<std_msgs::Bool>("signal/pause", 0, &RobotControllerNode::pauseCallback, this);
 		m_softPauseSub = m_nh.subscribe<std_msgs::Bool>("signal/soft_pause", 0, &RobotControllerNode::softPauseCallback, this);
->>>>>>> upstream/master
 
 		if (m_waitTime > 0.0) ros::Duration(m_waitTime).sleep();
 		ROS_DEBUG_COND(m_enableLogging, "Ready.");
@@ -62,7 +53,7 @@ public:
 		std_msgs::String state; // create msgs for state
 		state.data = State::robotStateToString(m_robot.getRobotState()); // set state msg
 
-		m_robotStatePub.publish(state); // publish state 
+		m_robotStatePub.publish(state); // publish state
 	}
 
 	/*
