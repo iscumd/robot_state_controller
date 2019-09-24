@@ -53,7 +53,7 @@ public:
 		std_msgs::String state; // create msgs for state
 		state.data = State::robotStateToString(m_robot.getRobotState()); // set state msg
 
-		m_robotStatePub.publish(state); // publish state 
+		m_robotStatePub.publish(state); // publish state
 	}
 
 	/*
