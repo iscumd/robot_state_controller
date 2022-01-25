@@ -1,3 +1,0 @@
-<launch>
-	<node pkg="robot_state_controller" name="drive_mode_switch" type="drive_mode_switch" />
-</launch>

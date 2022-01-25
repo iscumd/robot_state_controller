@@ -1,8 +1,0 @@
-<launch>
-	<arg name="enable_logging" default="false" />
-	<arg name="startup_delay" default="0.0" />
-	<node pkg="robot_state_controller" name="robot_state_controller" type="robot_state_controller">
-		<param name="enableLogging" value="$(arg enable_logging)" />
-		<param name="startup_wait_time" value="$(arg startup_delay)" />
-	</node>
-</launch>
