@@ -24,6 +24,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(robot_state_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 add_executable(robot_state_controller src/robot_state_controller.cpp)
 ament_target_dependencies(
