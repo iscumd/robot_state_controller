@@ -35,7 +35,7 @@ def generate_launch_description():
     get_package_share_directory('robot_state_controller')
 
     # Launch arguments
-    switch_button = LaunchConfiguration('switch_button', default=8)
+    switch_button = LaunchConfiguration('switch_button', default='8')
 
     robot_state_controller = Node(
         package='robot_state_controller',
@@ -56,7 +56,7 @@ def generate_launch_description():
     return LaunchDescription([
         # Launch Arguments
         DeclareLaunchArgument('switch_button',
-                              default_value=8,
+                              default_value='8',
                               description='Joy button which triggers a drive mode switch event'),
 
         # Nodes
