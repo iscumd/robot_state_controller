@@ -22,6 +22,8 @@ find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(robot_state_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 add_executable(robot_state_controller src/robot_state_controller.cpp)
 ament_target_dependencies(
@@ -47,9 +49,28 @@ target_include_directories(drive_mode_switch PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
+add_executable(initial_point_publisher src/initial_point_publisher.cpp)
+ament_target_dependencies(
+  initial_point_publisher
+  robot_state_msgs
+  rclcpp
+  std_msgs
+  geometry_msgs
+  tf2
+  tf2_geometry_msgs
+  tf2_ros
+)
+target_include_directories(initial_point_publisher PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
 install(TARGETS robot_state_controller
   DESTINATION lib/${PROJECT_NAME})
+
 install(TARGETS drive_mode_switch
+  DESTINATION lib/${PROJECT_NAME})
+
+install(TARGETS initial_point_publisher
   DESTINATION lib/${PROJECT_NAME})
 
 install(
