@@ -23,8 +23,13 @@
 #ifndef ROBOT_STATE_CONTROLLER__ROBOT_STATE_CONTROLLER_HPP_
 #define ROBOT_STATE_CONTROLLER__ROBOT_STATE_CONTROLLER_HPP_
 
+#include <chrono>
+#include <functional>
+#include <memory>
+
 #include "rclcpp/rclcpp.hpp"
 #include "robot_state_controller/state.hpp"
+#include "robot_state_msgs/msg/state.hpp"
 
 namespace RobotStateController
 {
@@ -34,7 +39,10 @@ public:
     explicit RobotStateController(rclcpp::NodeOptions options);
 
 private:
-    // here
+    rclcpp::TimerBase::SharedPtr system_state_timer_;
+    void update_state();
+
+    rclcpp::Publisher<robot_state_msgs::msg::State>::SharedPtr system_state_publisher_;
 };
 }  // namespace RobotStateController
 
