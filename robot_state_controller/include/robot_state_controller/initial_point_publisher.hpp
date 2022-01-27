@@ -46,6 +46,7 @@ public:
 
 private:
     // Param
+    tf2::Duration transform_tolerance_;
     std::string robot_frame_;
     std::string map_frame_;
     rclcpp::TimerBase::SharedPtr param_update_timer_;
@@ -60,7 +61,7 @@ private:
 
     // Pubs/Subs
     rclcpp::Subscription<robot_state_msgs::msg::DriveMode>::SharedPtr drive_mode_subscription_;
-    rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr initial_point_publisher_;
+    rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_point_publisher_;
 
     // TF
     std::shared_ptr<tf2_ros::TransformListener> transform_listener_;
