@@ -41,14 +41,16 @@ InitialPointPublisher::InitialPointPublisher(rclcpp::NodeOptions options)
         "/robot/drive_mode", 10,
         std::bind(&InitialPointPublisher::drive_mode_callback, this, std::placeholders::_1)
     );
-    initial_point_publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>(
-        "/initial_point", 10
+    initial_point_publisher_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
+        "/initialpose", 10
     );
 
     tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
     transform_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
     // Initial var state
+    transform_tolerance_ = tf2::durationFromSec(0.1);
+    
     is_initialized = false; // has initial_point been sent before
     last_drive_mode_state_ = State::DriveMode::TELEOP;
 }
@@ -76,19 +78,19 @@ void InitialPointPublisher::drive_mode_callback(const robot_state_msgs::msg::Dri
         // We need to publish the initial point at the position of the robot in the map frame
         // during the time which the drive mode is first transitioned to autonomous
 
-        geometry_msgs::msg::PoseStamped robot_pose;
-        geometry_msgs::msg::PoseStamped transformed_pose;
+        geometry_msgs::msg::PoseWithCovarianceStamped robot_pose;
+        geometry_msgs::msg::PoseWithCovarianceStamped transformed_pose;
 
         // Dead-reckon the pose into the robot frame
-        robot_pose.header.frame_id = robot_frame_;
+        robot_pose.header.frame_id = map_frame_;
         robot_pose.header.stamp = this->get_clock()->now();
-        robot_pose.pose.position.x = 0.0; // object probably instantiates to 0.0, but included
-        robot_pose.pose.position.y = 0.0; // for clarity's sake when reading (shrug)
-        robot_pose.pose.position.z = 0.0;
+        robot_pose.pose.pose.position.x = 0.0; // object probably instantiates to 0.0, but included
+        robot_pose.pose.pose.position.y = 0.0; // for clarity's sake when reading (shrug)
+        robot_pose.pose.pose.position.z = 0.0;
 
         try
         {   // perform the tf transform and publish the resulting pose
-            transformed_pose = tf_buffer_->transform(robot_pose, map_frame_);
+            transformed_pose = tf_buffer_->transform(robot_pose, map_frame_, transform_tolerance_);
             initial_point_publisher_->publish(transformed_pose);
             is_initialized = true;
         }
