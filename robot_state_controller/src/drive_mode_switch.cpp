@@ -45,7 +45,7 @@ DriveModeSwitch::DriveModeSwitch(rclcpp::NodeOptions options)
         std::bind(&DriveModeSwitch::joystick_callback, this, std::placeholders::_1)
     );
     controller_vel_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
-        "/ctrl_vel", 10,
+        "/cmd_vel", 10,
         std::bind(&DriveModeSwitch::controller_vel_callback, this, std::placeholders::_1)
     );
     navigation_vel_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
@@ -53,14 +53,13 @@ DriveModeSwitch::DriveModeSwitch(rclcpp::NodeOptions options)
         std::bind(&DriveModeSwitch::navigation_vel_callback, this, std::placeholders::_1)
     );
     cmd_vel_publisher_ = this->create_publisher<geometry_msgs::msg::Twist>(
-        "/cmd_vel", 10
+        "/mammoth/cmd_vel", 10
     );
     drive_mode_publisher_ = this->create_publisher<robot_state_msgs::msg::DriveMode>(
         "/robot/drive_mode", 10
     );
-
     // Init values
-    last_system_state_ = State::System::KILL;
+    last_system_state_ = State::System::ACTIVE;
     last_drive_mode_state_ = State::DriveMode::TELEOP;
     last_switch_button_pressed_ = false;
 }
