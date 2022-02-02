@@ -53,7 +53,7 @@ DriveModeSwitch::DriveModeSwitch(rclcpp::NodeOptions options)
         std::bind(&DriveModeSwitch::navigation_vel_callback, this, std::placeholders::_1)
     );
     cmd_vel_publisher_ = this->create_publisher<geometry_msgs::msg::Twist>(
-        "/mammoth/cmd_vel", 10
+        "/robot/cmd_vel", 10
     );
     drive_mode_publisher_ = this->create_publisher<robot_state_msgs::msg::DriveMode>(
         "/robot/drive_mode", 10
