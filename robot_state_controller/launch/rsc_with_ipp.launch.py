@@ -38,13 +38,16 @@ def generate_launch_description():
     switch_button = LaunchConfiguration('switch_button', default='8')
     robot_frame = LaunchConfiguration('robot_frame', default='base_footprint')
     map_frame = LaunchConfiguration('map_frame', default='map')
+    use_sim_time = LaunchConfiguration('use_sim_time', default=False)
 
     robot_state_controller = Node(
         package='robot_state_controller',
         executable='robot_state_controller',
         name='robot_state_controller',
-        output='screen'
-        )
+        output='screen',
+        parameters=[{
+            'use_sim_time': use_sim_time
+        }])
 
     drive_mode_switch = Node(
         package='robot_state_controller',
@@ -53,8 +56,9 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'switch_button': switch_button,
+            'use_sim_time': use_sim_time
         }])
-    
+
     initial_point_publisher = Node(
         package='robot_state_controller',
         executable='initial_point_publisher',
@@ -63,6 +67,7 @@ def generate_launch_description():
         parameters=[{
             'robot_frame': robot_frame,
             'map_frame': map_frame,
+            'use_sim_time': use_sim_time
         }])
 
     return LaunchDescription([
@@ -76,6 +81,9 @@ def generate_launch_description():
         DeclareLaunchArgument('map_frame',
                               default_value='map',
                               description='The robots map frame'),
+        DeclareLaunchArgument('use_sim_time',
+                              default_value='false',
+                              description='To use sim time or not'),
 
         # Nodes
         robot_state_controller,
