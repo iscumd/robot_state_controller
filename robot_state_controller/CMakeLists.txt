@@ -26,7 +26,7 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
-add_executable(robot_state_controller src/robot_state_controller.cpp)
+add_executable(robot_state_controller src/robot_state_controller.cpp src/robot_state_controller_node.cpp)
 ament_target_dependencies(
         robot_state_controller
         robot_state_msgs
@@ -37,7 +37,7 @@ target_include_directories(robot_state_controller PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
 
-add_executable(drive_mode_switch src/drive_mode_switch.cpp)
+add_executable(drive_mode_switch src/drive_mode_switch.cpp src/drive_mode_switch_node.cpp)
 ament_target_dependencies(
         drive_mode_switch
         robot_state_msgs
@@ -50,7 +50,7 @@ target_include_directories(drive_mode_switch PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
 
-add_executable(initial_point_publisher src/initial_point_publisher.cpp)
+add_executable(initial_point_publisher src/initial_point_publisher.cpp src/initial_point_publisher_node.cpp)
 ament_target_dependencies(
         initial_point_publisher
         robot_state_msgs
