@@ -19,10 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
-#ifndef ROBOT_STATE_CONTROLLER__DRIVE_MODE_SWITCH_HPP_
-#define ROBOT_STATE_CONTROLLER__DRIVE_MODE_SWITCH_HPP_
-
+#pragma once
 #include <chrono>
 #include <functional>
 #include <memory>
@@ -68,5 +65,3 @@ private:
     rclcpp::Publisher<robot_state_msgs::msg::DriveMode>::SharedPtr drive_mode_publisher_;
 };
 }  // namespace RobotStateController
-
-#endif  // ROBOT_STATE_CONTROLLER__DRIVE_MODE_SWITCH_HPP_

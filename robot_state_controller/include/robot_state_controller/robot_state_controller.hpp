@@ -19,10 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
-#ifndef ROBOT_STATE_CONTROLLER__ROBOT_STATE_CONTROLLER_HPP_
-#define ROBOT_STATE_CONTROLLER__ROBOT_STATE_CONTROLLER_HPP_
-
+#pragma once
 #include <chrono>
 #include <functional>
 #include <memory>
@@ -45,5 +42,3 @@ private:
     rclcpp::Publisher<robot_state_msgs::msg::State>::SharedPtr system_state_publisher_;
 };
 }  // namespace RobotStateController
-
-#endif  // ROBOT_STATE_CONTROLLER__ROBOT_STATE_CONTROLLER_HPP_

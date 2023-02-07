@@ -22,7 +22,7 @@
 
 #include "robot_state_controller/initial_point_publisher.hpp"
 
-using namespace std::chrono_literals; // for 1000ms?
+using namespace std::chrono_literals;
 
 namespace RobotStateController
 {
