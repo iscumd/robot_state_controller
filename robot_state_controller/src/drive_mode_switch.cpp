@@ -27,7 +27,7 @@ namespace RobotStateController
 DriveModeSwitch::DriveModeSwitch(rclcpp::NodeOptions options)
 : Node("drive_mode_switch", options)
 {
-    using namespace std::chrono_literals; // for 1000ms?
+    using namespace std::chrono_literals;
 
     // Param
     this->declare_parameter<int>("switch_button", 8);
