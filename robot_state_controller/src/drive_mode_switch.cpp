@@ -22,56 +22,34 @@
 
 #include "robot_state_controller/drive_mode_switch.hpp"
 
-namespace RobotStateController
-{
-DriveModeSwitch::DriveModeSwitch(rclcpp::NodeOptions options)
-: Node("drive_mode_switch", options)
-{
+namespace RobotStateController {
+DriveModeSwitch::DriveModeSwitch(rclcpp::NodeOptions options) : Node("drive_mode_switch", options) {
     using namespace std::chrono_literals;
 
     // Param
     this->declare_parameter<int>("switch_button", 8);
-    param_update_timer_ = this->create_wall_timer(
-      1000ms, std::bind(&DriveModeSwitch::update_params, this)
-      );
-    
+    param_update_timer_ = this->create_wall_timer(1000ms, std::bind(&DriveModeSwitch::update_params, this));
+
     // Subs/Pubs
     robot_state_subscription_ = this->create_subscription<robot_state_msgs::msg::State>(
-        "/robot/state", 10,
-        std::bind(&DriveModeSwitch::robot_state_callback, this, std::placeholders::_1)
-    );
+        "/robot/state", 10, std::bind(&DriveModeSwitch::robot_state_callback, this, std::placeholders::_1));
     joystick_subscription_ = this->create_subscription<sensor_msgs::msg::Joy>(
-        "/joy", 10,
-        std::bind(&DriveModeSwitch::joystick_callback, this, std::placeholders::_1)
-    );
+        "/joy", 10, std::bind(&DriveModeSwitch::joystick_callback, this, std::placeholders::_1));
     controller_vel_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
-        "/cmd_vel", 10,
-        std::bind(&DriveModeSwitch::controller_vel_callback, this, std::placeholders::_1)
-    );
+        "/cmd_vel", 10, std::bind(&DriveModeSwitch::controller_vel_callback, this, std::placeholders::_1));
     navigation_vel_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
-        "/nav_vel", 10,
-        std::bind(&DriveModeSwitch::navigation_vel_callback, this, std::placeholders::_1)
-    );
-    cmd_vel_publisher_ = this->create_publisher<geometry_msgs::msg::Twist>(
-        "/robot/cmd_vel", 10
-    );
-    drive_mode_publisher_ = this->create_publisher<robot_state_msgs::msg::DriveMode>(
-        "/robot/drive_mode", 10
-    );
+        "/nav_vel", 10, std::bind(&DriveModeSwitch::navigation_vel_callback, this, std::placeholders::_1));
+    cmd_vel_publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/robot/cmd_vel", 10);
+    drive_mode_publisher_ = this->create_publisher<robot_state_msgs::msg::DriveMode>("/robot/drive_mode", 10);
     // Init values
     last_system_state_ = State::System::ACTIVE;
     last_drive_mode_state_ = State::DriveMode::TELEOP;
     last_switch_button_pressed_ = false;
 }
-void DriveModeSwitch::update_params()
-{
-    this->get_parameter("switch_button", switch_button_);
-}
-void DriveModeSwitch::robot_state_callback(const robot_state_msgs::msg::State::SharedPtr msg)
-{
+void DriveModeSwitch::update_params() { this->get_parameter("switch_button", switch_button_); }
+void DriveModeSwitch::robot_state_callback(const robot_state_msgs::msg::State::SharedPtr msg) {
     // Save system state from incoming state information
-    switch(msg->state)
-    {
+    switch (msg->state) {
         case 0:
             last_system_state_ = State::System::KILL;
             break;
@@ -85,8 +63,7 @@ void DriveModeSwitch::robot_state_callback(const robot_state_msgs::msg::State::S
             last_system_state_ = State::System::KILL;
     }
 }
-void DriveModeSwitch::joystick_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
-{
+void DriveModeSwitch::joystick_callback(const sensor_msgs::msg::Joy::SharedPtr msg) {
     // Whether or not the switch button is currently pressed
     bool switch_button_pressed_ = msg->buttons[switch_button_] == 1;
 
@@ -95,17 +72,15 @@ void DriveModeSwitch::joystick_callback(const sensor_msgs::msg::Joy::SharedPtr m
 
     // Check if the switch button is being currently pressed against
     // whether or not the switch button was previously pressed.
-    // 
+    //
     // NOTE: This will debounce the switch button. If not done this way,
     // the drive mode will be rapidly switched at the joy publish frequency
     // as long as the button is being held. Even a normal button press
     // on the controller will lead to unpredictable drive mode state if
     // not triggered falling edge in this way.
-    if (last_switch_button_pressed_ && !switch_button_pressed_)
-    {
+    if (last_switch_button_pressed_ && !switch_button_pressed_) {
         // Update drive mode state
-        switch(last_drive_mode_state_)
-        {
+        switch (last_drive_mode_state_) {
             case State::DriveMode::TELEOP:
                 last_drive_mode_state_ = State::DriveMode::AUTONOMOUS;
                 drive_mode_msg.drive_mode = 1;
@@ -122,36 +97,29 @@ void DriveModeSwitch::joystick_callback(const sensor_msgs::msg::Joy::SharedPtr m
     // Update whether or not switch button was pressed for debouncing
     last_switch_button_pressed_ = switch_button_pressed_;
 }
-void DriveModeSwitch::controller_vel_callback(const geometry_msgs::msg::Twist::SharedPtr msg)
-{
+void DriveModeSwitch::controller_vel_callback(const geometry_msgs::msg::Twist::SharedPtr msg) {
     // Only publish the twist command from the controller
     // if the robot is in teleop and not killed
-    if (last_drive_mode_state_ == State::DriveMode::TELEOP
-        && last_system_state_ == State::System::ACTIVE)
-    {
+    if (last_drive_mode_state_ == State::DriveMode::TELEOP && last_system_state_ == State::System::ACTIVE) {
         cmd_vel_publisher_->publish(*msg);
     }
 }
-void DriveModeSwitch::navigation_vel_callback(const geometry_msgs::msg::Twist::SharedPtr msg)
-{
+void DriveModeSwitch::navigation_vel_callback(const geometry_msgs::msg::Twist::SharedPtr msg) {
     // Only publish the twist command from navigation
     // if the robot is in teleop and not killed
-    if (last_drive_mode_state_ == State::DriveMode::AUTONOMOUS
-        && last_system_state_ == State::System::ACTIVE)
-    {
+    if (last_drive_mode_state_ == State::DriveMode::AUTONOMOUS && last_system_state_ == State::System::ACTIVE) {
         cmd_vel_publisher_->publish(*msg);
     }
 }
-} // namespace RobotStateController
+}  // namespace RobotStateController
 
-int main(int argc, char * argv[])
-{
-  rclcpp::init(argc, argv);
-  rclcpp::executors::SingleThreadedExecutor exec;
-  rclcpp::NodeOptions options;
-  auto dms_node = std::make_shared<RobotStateController::DriveModeSwitch>(options);
-  exec.add_node(dms_node);
-  exec.spin();
-  rclcpp::shutdown();
-  return 0;
+int main(int argc, char* argv[]) {
+    rclcpp::init(argc, argv);
+    rclcpp::executors::SingleThreadedExecutor exec;
+    rclcpp::NodeOptions options;
+    auto dms_node = std::make_shared<RobotStateController::DriveModeSwitch>(options);
+    exec.add_node(dms_node);
+    exec.spin();
+    rclcpp::shutdown();
+    return 0;
 }

@@ -23,35 +23,29 @@
 #include "robot_state_controller/robot_state_controller.hpp"
 
 namespace RobotStateController {
-using namespace std::placeholders;
-RobotStateController::RobotStateController(rclcpp::NodeOptions options)
-: Node("robot_state_controller", options)
-{
-    system_state_publisher_ = this->create_publisher<robot_state_msgs::msg::State>(
-        "/robot/state", 10
-    );
 
-    this->set_state_srv_ = this->create_service<robot_state_msgs::srv::SetState>("/robot/set_state", std::bind(&RobotStateController::set_state_cb, this, _1, _2));
+using namespace std::placeholders;
+
+RobotStateController::RobotStateController(rclcpp::NodeOptions options) : Node("robot_state_controller", options) {
+    this->system_state_publisher_ = this->create_publisher<robot_state_msgs::msg::State>("/robot/state", 10);
+
+    this->set_state_srv_ = this->create_service<robot_state_msgs::srv::SetState>(
+        "/robot/set_state", std::bind(&RobotStateController::set_state_cb, this, _1, _2));
 
     using namespace std::chrono_literals;
-    system_state_timer_ = this->create_wall_timer(
-      50ms, std::bind(&RobotStateController::update_state, this)
-    );
-}
-void RobotStateController::update_state()
-{
-    system_state_publisher_->publish(this->state);
+    system_state_timer_ = this->create_wall_timer(50ms, std::bind(&RobotStateController::update_state, this));
 }
 
+void RobotStateController::update_state() { system_state_publisher_->publish(this->state); }
 
-    void RobotStateController::set_state_cb(const robot_state_msgs::srv::SetState::Request::SharedPtr state,
-                                            robot_state_msgs::srv::SetState::Response::SharedPtr resp) {
+void RobotStateController::set_state_cb(const robot_state_msgs::srv::SetState::Request::SharedPtr state,
+                                        robot_state_msgs::srv::SetState::Response::SharedPtr resp) {
     this->state = state->state;
 }
-} // namespace RobotStateController
 
-int main(int argc, char * argv[])
-{
+}  // namespace RobotStateController
+
+int main(int argc, char* argv[]) {
     rclcpp::init(argc, argv);
     rclcpp::executors::SingleThreadedExecutor exec;
     rclcpp::NodeOptions options;

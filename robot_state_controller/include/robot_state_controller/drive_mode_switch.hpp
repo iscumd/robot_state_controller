@@ -24,18 +24,16 @@
 #include <functional>
 #include <memory>
 
+#include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
+#include "robot_state_controller/state.hpp"
+#include "robot_state_msgs/msg/drive_mode.hpp"
+#include "robot_state_msgs/msg/state.hpp"
 #include "sensor_msgs/msg/joy.hpp"
 #include "std_msgs/msg/header.hpp"
-#include "geometry_msgs/msg/twist.hpp"
-#include "robot_state_controller/state.hpp"
-#include "robot_state_msgs/msg/state.hpp"
-#include "robot_state_msgs/msg/drive_mode.hpp"
 
-namespace RobotStateController
-{
-class DriveModeSwitch : public rclcpp::Node
-{
+namespace RobotStateController {
+class DriveModeSwitch : public rclcpp::Node {
 public:
     explicit DriveModeSwitch(rclcpp::NodeOptions options);
 
