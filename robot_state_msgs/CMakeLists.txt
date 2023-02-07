@@ -17,11 +17,14 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(robot_state_msgs
   "msg/DriveMode.msg"
   "msg/State.msg"
+  "srv/SetState.srv"
+        DEPENDENCIES std_msgs
 )
 
 if(BUILD_TESTING)
