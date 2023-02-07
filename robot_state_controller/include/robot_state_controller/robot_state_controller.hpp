@@ -29,17 +29,17 @@
 #include "robot_state_msgs/msg/state.hpp"
 #include "robot_state_msgs/srv/set_state.hpp"
 
-namespace RobotStateController
-{
-class RobotStateController : public rclcpp::Node
-{
+namespace RobotStateController {
+class RobotStateController : public rclcpp::Node {
 public:
     explicit RobotStateController(rclcpp::NodeOptions options);
 
     /// Our current system state
     robot_state_msgs::msg::State state;
 
-    void set_state_cb(const robot_state_msgs::srv::SetState::Request::SharedPtr state, robot_state_msgs::srv::SetState::Response::SharedPtr resp);
+    void set_state_cb(const robot_state_msgs::srv::SetState::Request::SharedPtr state,
+                      robot_state_msgs::srv::SetState::Response::SharedPtr resp);
+
 private:
     // Used to publish the state on a timer
     rclcpp::TimerBase::SharedPtr system_state_timer_;

@@ -21,24 +21,8 @@
 // SOFTWARE.
 #pragma once
 
-namespace State
-{
-enum System
-{
-    KILL,
-    PAUSE,
-    ACTIVE
-};
-enum DriveMode
-{
-    TELEOP,
-    AUTONOMOUS
-};
-enum Error
-{
-    NONE,
-    SENSOR_TIMEOUT,
-    CONTROLLER_TIMEOUT,
-    BATTERY_LOW
-};
-} // namespace State
+namespace State {
+enum System { KILL, PAUSE, ACTIVE };
+enum DriveMode { TELEOP, AUTONOMOUS };
+enum Error { NONE, SENSOR_TIMEOUT, CONTROLLER_TIMEOUT, BATTERY_LOW };
+}  // namespace State
