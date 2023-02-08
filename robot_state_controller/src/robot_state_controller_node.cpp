@@ -27,6 +27,8 @@ namespace RobotStateController {
 using namespace std::placeholders;
 
 RobotStateController::RobotStateController(rclcpp::NodeOptions options) : Node("robot_state_controller", options) {
+    this->state.state = robot_state_msgs::msg::State::ACTIVE;
+
     this->system_state_publisher_ = this->create_publisher<robot_state_msgs::msg::State>("/robot/state", 10);
 
     this->set_state_srv_ = this->create_service<robot_state_msgs::srv::SetState>(
