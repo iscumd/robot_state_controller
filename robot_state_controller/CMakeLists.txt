@@ -27,11 +27,15 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
 add_executable(robot_state_controller src/robot_state_controller.cpp src/robot_state_controller_node.cpp)
-ament_target_dependencies(
-        robot_state_controller
+set(robot_state_controller_deps
         robot_state_msgs
         rclcpp
         std_msgs
+        )
+
+ament_target_dependencies(
+        robot_state_controller
+        ${robot_state_controller_deps}
 )
 target_include_directories(robot_state_controller PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -80,14 +84,21 @@ install(
 )
 
 if (BUILD_TESTING)
-    find_package(ament_lint_auto REQUIRED) #TODO fix lints and add tests
-    # the following line skips the linter which checks for copyrights
-    # uncomment the line when a copyright and license is not present in all source files
-    #set(ament_cmake_copyright_FOUND TRUE)
-    # the following line skips cpplint (only works in a git repo)
-    # uncomment the line when this package is not in a git repo
-    #set(ament_cmake_cpplint_FOUND TRUE)
-    ament_lint_auto_find_test_dependencies()
+    # Manually invoke clang format so it actually uses our file
+    find_package(ament_cmake_clang_format REQUIRED)
+    ament_clang_format(CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/.clang-format)
+
+    find_package(ament_cmake_gtest REQUIRED)
+
+    # Add unit tests
+    ament_add_gtest(robot_state_controller-test
+            test/robot_state_controller_unit.cpp
+            src/robot_state_controller_node.cpp
+            )
+    ament_target_dependencies(robot_state_controller-test ${robot_state_controller_deps})
+    target_include_directories(robot_state_controller-test PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            $<INSTALL_INTERFACE:include>)
 endif ()
 
 ament_package()
