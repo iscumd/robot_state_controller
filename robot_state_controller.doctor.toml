@@ -40,6 +40,10 @@ name = '/robot/cmd_vel'
 description = 'Control messages from whichever stream is currently selected.'
 
 [[nodes.publishes]]
+name = '/robot/ack_vel'
+description = 'Control messages from whichever stream is currently selected (AckermannDrive version).'
+
+[[nodes.publishes]]
 name = '/robot/drive_mode'
 description = 'Current drive mode of the system. AUTONOMOUS or TELEOP.'
 
@@ -56,8 +60,16 @@ name = '/nav_vel'
 description = 'Twist commands from the autonomous system. This will be fowarded to /robot/cmd_vel if the drive mode is AUTONOMOUS'
 
 [[nodes.subscribes]]
+name = '/nav_ack_vel'
+description = 'AckermannDrive commands from the autonomous system. This will be fowarded to /robot/ack_vel if the drive mode is AUTONOMOUS'
+
+[[nodes.subscribes]]
 name = '/cmd_vel'
-description = 'Twist commands from the teleop source. TThis will be fowarded to /robot/cmd_vel if the drive mode is TELEOP'
+description = 'Twist commands from the teleop source. This will be fowarded to /robot/cmd_vel if the drive mode is TELEOP'
+
+[[nodes.subscribes]]
+name = '/ack_vel'
+description = 'AckermannDrive commands from the teleop source. This will be fowarded to /robot/ack_vel if the drive mode is TELEOP'
 
 [[nodes.param]]
 name = 'switch_button'

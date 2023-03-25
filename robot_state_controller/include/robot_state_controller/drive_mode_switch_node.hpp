@@ -24,6 +24,7 @@
 #include <functional>
 #include <memory>
 
+#include "ackermann_msgs/msg/ackermann_drive.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "robot_state_controller/state.hpp"
@@ -52,14 +53,19 @@ private:
     void robot_state_callback(const robot_state_msgs::msg::State::SharedPtr msg);
     void joystick_callback(const sensor_msgs::msg::Joy::SharedPtr msg);
     void controller_vel_callback(const geometry_msgs::msg::Twist::SharedPtr msg);
+    void controller_vel_callback_ack(const ackermann_msgs::msg::AckermannDrive::SharedPtr msg);
+    void navigation_vel_callback_ack(const ackermann_msgs::msg::AckermannDrive::SharedPtr msg);
     void navigation_vel_callback(const geometry_msgs::msg::Twist::SharedPtr msg);
 
     // Pubs/Subs
     rclcpp::Subscription<robot_state_msgs::msg::State>::SharedPtr robot_state_subscription_;
     rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joystick_subscription_;
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr controller_vel_subscription_;
+    rclcpp::Subscription<ackermann_msgs::msg::AckermannDrive>::SharedPtr controller_vel_subscription_ack_;
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr navigation_vel_subscription_;
+    rclcpp::Subscription<ackermann_msgs::msg::AckermannDrive>::SharedPtr navigation_vel_subscription_ack_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
+    rclcpp::Publisher<ackermann_msgs::msg::AckermannDrive>::SharedPtr ack_vel_publisher_;
     rclcpp::Publisher<robot_state_msgs::msg::DriveMode>::SharedPtr drive_mode_publisher_;
 };
 }  // namespace RobotStateController

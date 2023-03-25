@@ -4,7 +4,7 @@ From package '[robot_state_controller](https://github.com/iscumd/robot_state_con
 `./src/robot_state_controller.cpp`
 
 ## Summary 
- Encapsulates the current operating state of the robot. These are states like: ACTIVE, KILLED, PAUSED ect. These can be
+ Encpasulates the current operating state of the robot. These are states like: ACTIVE, KILLED, PAUSED ect. These can be
 modified by a service, and consumed via a publisher.
 
 ## Topics

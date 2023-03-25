@@ -37,16 +37,23 @@ DriveModeSwitch::DriveModeSwitch(rclcpp::NodeOptions options) : Node("drive_mode
         "/joy", 10, std::bind(&DriveModeSwitch::joystick_callback, this, std::placeholders::_1));
     controller_vel_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
         "/cmd_vel", 10, std::bind(&DriveModeSwitch::controller_vel_callback, this, std::placeholders::_1));
+    controller_vel_subscription_ack_ = this->create_subscription<ackermann_msgs::msg::AckermannDrive>(
+        "/ack_vel", 10, std::bind(&DriveModeSwitch::controller_vel_callback_ack, this, std::placeholders::_1));
     navigation_vel_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
         "/nav_vel", 10, std::bind(&DriveModeSwitch::navigation_vel_callback, this, std::placeholders::_1));
+    navigation_vel_subscription_ack_ = this->create_subscription<ackermann_msgs::msg::AckermannDrive>(
+        "/nav_ack_vel", 10, std::bind(&DriveModeSwitch::navigation_vel_callback_ack, this, std::placeholders::_1));
     cmd_vel_publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/robot/cmd_vel", 10);
+    ack_vel_publisher_ = this->create_publisher<ackermann_msgs::msg::AckermannDrive>("/robot/ack_vel", 10);
     drive_mode_publisher_ = this->create_publisher<robot_state_msgs::msg::DriveMode>("/robot/drive_mode", 10);
     // Init values
     last_system_state_ = State::System::ACTIVE;
     last_drive_mode_state_ = State::DriveMode::TELEOP;
     last_switch_button_pressed_ = false;
 }
+
 void DriveModeSwitch::update_params() { this->get_parameter("switch_button", switch_button_); }
+
 void DriveModeSwitch::robot_state_callback(const robot_state_msgs::msg::State::SharedPtr msg) {
     // Save system state from incoming state information
     switch (msg->state) {
@@ -63,6 +70,7 @@ void DriveModeSwitch::robot_state_callback(const robot_state_msgs::msg::State::S
             last_system_state_ = State::System::KILL;
     }
 }
+
 void DriveModeSwitch::joystick_callback(const sensor_msgs::msg::Joy::SharedPtr msg) {
     // Whether or not the switch button is currently pressed
     bool switch_button_pressed_ = msg->buttons[switch_button_] == 1;
@@ -97,6 +105,7 @@ void DriveModeSwitch::joystick_callback(const sensor_msgs::msg::Joy::SharedPtr m
     // Update whether or not switch button was pressed for debouncing
     last_switch_button_pressed_ = switch_button_pressed_;
 }
+
 void DriveModeSwitch::controller_vel_callback(const geometry_msgs::msg::Twist::SharedPtr msg) {
     // Only publish the twist command from the controller
     // if the robot is in teleop and not killed
@@ -104,11 +113,28 @@ void DriveModeSwitch::controller_vel_callback(const geometry_msgs::msg::Twist::S
         cmd_vel_publisher_->publish(*msg);
     }
 }
+
 void DriveModeSwitch::navigation_vel_callback(const geometry_msgs::msg::Twist::SharedPtr msg) {
     // Only publish the twist command from navigation
     // if the robot is in teleop and not killed
     if (last_drive_mode_state_ == State::DriveMode::AUTONOMOUS && last_system_state_ == State::System::ACTIVE) {
         cmd_vel_publisher_->publish(*msg);
+    }
+}
+
+void DriveModeSwitch::controller_vel_callback_ack(const ackermann_msgs::msg::AckermannDrive::SharedPtr msg) {
+    // Only publish the ack command from the controller
+    // if the robot is in teleop and not killed
+    if (last_drive_mode_state_ == State::DriveMode::TELEOP && last_system_state_ == State::System::ACTIVE) {
+        ack_vel_publisher_->publish(*msg);
+    }
+}
+
+void DriveModeSwitch::navigation_vel_callback_ack(const ackermann_msgs::msg::AckermannDrive::SharedPtr msg) {
+    // Only publish the ack command from navigation
+    // if the robot is in teleop and not killed
+    if (last_drive_mode_state_ == State::DriveMode::AUTONOMOUS && last_system_state_ == State::System::ACTIVE) {
+        ack_vel_publisher_->publish(*msg);
     }
 }
 }  // namespace RobotStateController
