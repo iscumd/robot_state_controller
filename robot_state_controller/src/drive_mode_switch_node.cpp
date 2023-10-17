@@ -46,9 +46,12 @@ DriveModeSwitch::DriveModeSwitch(rclcpp::NodeOptions options) : Node("drive_mode
     cmd_vel_publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/robot/cmd_vel", 10);
     ack_vel_publisher_ = this->create_publisher<ackermann_msgs::msg::AckermannDrive>("/robot/ack_vel", 10);
     drive_mode_publisher_ = this->create_publisher<robot_state_msgs::msg::DriveMode>("/robot/drive_mode", 10);
+
     // Init values
+    auto init_value = this->declare_parameter("init_value", "teleop");
+
     last_system_state_ = State::System::ACTIVE;
-    last_drive_mode_state_ = State::DriveMode::TELEOP;
+    last_drive_mode_state_ = init_value == "teleop" ? State::DriveMode::TELEOP : State::DriveMode::AUTONOMOUS;
     last_switch_button_pressed_ = false;
 }
 

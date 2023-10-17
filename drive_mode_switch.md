@@ -9,7 +9,7 @@ It is expected that a joystick provides the telop source, and thus a button is c
 to telop operation when pressed.
 This node is aware of robot state, and will stop forwarding either stream if the robot is not in the ACTIVE state.
 
-This node will boot in ACTIVE and TELEOP.
+This node will boot in ACTIVE and TELEOP (configurable).
 
 ## Topics
 

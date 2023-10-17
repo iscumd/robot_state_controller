@@ -36,6 +36,7 @@ def generate_launch_description():
 
     # Launch arguments
     switch_button = LaunchConfiguration('switch_button', default='8')
+    init_value = LaunchConfiguration('init_value', default='teleop')
 
     robot_state_controller = Node(
         package='robot_state_controller',
@@ -51,6 +52,7 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'switch_button': switch_button,
+            'init_value': init_value
         }])
 
     return LaunchDescription([
@@ -58,6 +60,9 @@ def generate_launch_description():
         DeclareLaunchArgument('switch_button',
                               default_value='8',
                               description='Joy button which triggers a drive mode switch event'),
+        DeclareLaunchArgument('init_value',
+                              default_value='teleop',
+                              description='Starting state of drive mode switch'),
 
         # Nodes
         robot_state_controller,
