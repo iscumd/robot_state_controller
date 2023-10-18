@@ -1,0 +1,109 @@
+#ROS package you are documenting
+package_name = "robot_state_controller"
+repo = "https://github.com/iscumd/robot_state_controller"
+
+#You can have multiple nodes in one package
+[[nodes]]
+node_name = 'robot_state_controller'
+#Relitive to this file
+source_file = ['./src/robot_state_controller.cpp']
+summary = '''
+Encpasulates the current operating state of the robot. These are states like: ACTIVE, KILLED, PAUSED ect. These can be
+modified by a service, and consumed via a publisher.
+'''
+
+#Your published topics (optional)
+[[nodes.publishes]]
+name = '/robot/state'
+description = 'The current state of the robot, published on a set interval (currently 100hz)'
+
+[[nodes.publishes]]
+name = '/robot/set_state'
+description = 'A service that sets the robots internal state to the passed state. Note that this node will do nothing but republish this state for other nodes.'
+
+[[nodes]]
+node_name = 'drive_mode_switch'
+#Relitive to this file
+source_file = ['./src/drive_mode_switch.cpp']
+summary = '''
+Switches over a stream of autonomous drive commands and teleop drive commands, selecting the one matching the current robots state.
+It is expected that a joystick provides the telop source, and thus a button is configured that will swap the robot from autonomous
+to telop operation when pressed.
+This node is aware of robot state, and will stop forwarding either stream if the robot is not in the ACTIVE state.
+
+This node will boot in ACTIVE and TELEOP (configurable).
+'''
+
+#Your published topics (optional)
+[[nodes.publishes]]
+name = '/robot/cmd_vel'
+description = 'Control messages from whichever stream is currently selected.'
+
+[[nodes.publishes]]
+name = '/robot/ack_vel'
+description = 'Control messages from whichever stream is currently selected (AckermannDrive version).'
+
+[[nodes.publishes]]
+name = '/robot/drive_mode'
+description = 'Current drive mode of the system. AUTONOMOUS or TELEOP.'
+
+[[nodes.subscribes]]
+name = '/robot/state'
+description = 'Current robot state. Will stop publishing /robot/cmd_vel when not ACTIVE.'
+
+[[nodes.subscribes]]
+name = '/joy'
+description = 'Joy topic to listen for drive mode switch button.'
+
+[[nodes.subscribes]]
+name = '/nav_vel'
+description = 'Twist commands from the autonomous system. This will be fowarded to /robot/cmd_vel if the drive mode is AUTONOMOUS'
+
+[[nodes.subscribes]]
+name = '/nav_ack_vel'
+description = 'AckermannDrive commands from the autonomous system. This will be fowarded to /robot/ack_vel if the drive mode is AUTONOMOUS'
+
+[[nodes.subscribes]]
+name = '/cmd_vel'
+description = 'Twist commands from the teleop source. This will be fowarded to /robot/cmd_vel if the drive mode is TELEOP'
+
+[[nodes.subscribes]]
+name = '/ack_vel'
+description = 'AckermannDrive commands from the teleop source. This will be fowarded to /robot/ack_vel if the drive mode is TELEOP'
+
+[[nodes.param]]
+name = 'switch_button'
+description = 'Joy button that will cause the drive mode to switch. Default 8'
+
+[[nodes.param]]
+name = 'init_value'
+description = 'Selects the default drive mode state of the node. Default "teleop", options: ["teleop", "auton"]'
+
+[[nodes]]
+node_name = 'inital_point_publisher'
+#Relitive to this file
+source_file = ['./src/inital_point_publisher.cpp']
+summary = '''
+Publishes the inital pose of the robot in a map when entering auton for the first time. This is intended to be used with
+the rest of the robot_state_controller utilities and something like nav2.
+
+Semantically, this node will transform pose (0,0,0) in the robot frame into the map frame, then publish.
+'''
+
+#Your published topics (optional)
+[[nodes.publishes]]
+name = '/initalpose'
+description = 'Topic on which the inital pose will be published'
+
+[[nodes.subscribes]]
+name = '/robot/drive_mode'
+description = 'Drive mode to query. Will publish inital pose the first time this switches to AUTONOMOUS.'
+
+[[nodes.param]]
+name = 'robot_frame'
+description = 'Frame of the robot. default base_footprint'
+
+[[nodes.param]]
+name = 'map_frame'
+description = 'Frame of the map to transform into. default map'
+
