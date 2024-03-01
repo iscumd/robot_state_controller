@@ -8,6 +8,7 @@ From package '[robot_state_controller](https://github.com/iscumd/robot_state_con
 It is expected that a joystick provides the telop source, and thus a button is configured that will swap the robot from autonomous
 to telop operation when pressed.
 This node is aware of robot state, and will stop forwarding either stream if the robot is not in the ACTIVE state.
+If a KILLED state is received, then it will be put into teleop for safety when later re-enabling the bot. 
 
 This node will boot in ACTIVE and TELEOP (configurable).
 

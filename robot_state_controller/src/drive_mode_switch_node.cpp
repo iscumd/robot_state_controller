@@ -59,9 +59,14 @@ void DriveModeSwitch::update_params() { this->get_parameter("switch_button", swi
 
 void DriveModeSwitch::robot_state_callback(const robot_state_msgs::msg::State::SharedPtr msg) {
     // Save system state from incoming state information
+    robot_state_msgs::msg::DriveMode drive_mode_msg{};
     switch (msg->state) {
         case 0:
             last_system_state_ = State::System::KILL;
+            // Transition to teleop on kill, so we don't run people over with bots on un-estop.
+            this->last_drive_mode_state_ = State::TELEOP;
+            drive_mode_msg.drive_mode = robot_state_msgs::msg::DriveMode::TELEOP;
+            drive_mode_publisher_->publish(drive_mode_msg);
             break;
         case 1:
             last_system_state_ = State::System::PAUSE;
